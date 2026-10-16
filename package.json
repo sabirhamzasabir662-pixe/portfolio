@@ -1,0 +1,29 @@
+{
+  "name": "hamza-portfolio-fullstack",
+  "version": "1.0.0",
+  "description": "Professional Full-Stack Portfolio Website for Hamza, Software Engineer in Peshawar, Pakistan",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node scripts/seed.js"
+  },
+  "keywords": [
+    "portfolio",
+    "software-engineer",
+    "peshawar",
+    "pakistan",
+    "full-stack",
+    "express",
+    "sqlite"
+  ],
+  "author": "Hamza <sabirhamzasabir662@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "nodemailer": "^6.9.16",
+    "sqlite3": "^5.1.7"
+  }
+}
