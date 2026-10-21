@@ -20,6 +20,7 @@ app.use('/api/projects', require('./routes/projects'));
 app.use('/api/services', require('./routes/services'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/messages', require('./routes/messages'));
+app.use('/api/github', require('./routes/github'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -1,7 +1,7 @@
 /**
  * HAMZA PORTFOLIO - CLIENT-SIDE APPLICATION SCRIPT
- * Handles Dynamic API Data Loading, Interactive Contact Form,
- * Mobile Navigation, and Micro-interactions.
+ * Handles Dynamic Projects & GitHub Repositories Loading,
+ * Interactive Contact Form, Mobile Navigation, and Micro-interactions.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopyButtons();
   initDynamicProjects();
   initDynamicServices();
+  initDynamicGithubRepos();
   initContactForm();
   updateCurrentYear();
 });
@@ -165,8 +166,6 @@ async function initDynamicProjects() {
       renderProjects(result.data, container);
     }
   } catch (error) {
-    // If backend is not running or serving static file directly, 
-    // the pre-rendered HTML in index.html acts as instant fallback
     console.info('[*] Backend API not reached; utilizing pre-rendered project data.');
   }
 }
@@ -335,7 +334,160 @@ function renderServices(services, container) {
 }
 
 /* --------------------------------------------------------------------------
-   7. Interactive Client Contact Form (POST /api/contact)
+   7. Dynamic GitHub Repositories (GET /api/github/repos with 1-hr Cache)
+   -------------------------------------------------------------------------- */
+async function initDynamicGithubRepos() {
+  const reposGrid = document.getElementById('github-repos-grid');
+  const totalReposEl = document.getElementById('github-total-repos');
+  const languagesListEl = document.getElementById('github-top-languages');
+  const profileLinks = document.querySelectorAll('.github-profile-link');
+  const handleEl = document.getElementById('contact-github-handle');
+
+  try {
+    const response = await fetch('/api/github/repos');
+    const result = await response.json();
+
+    const username = result.username || 'sabirhamzasabir662-pixe';
+    const profileUrl = result.profileUrl || `https://github.com/${username}`;
+
+    // Update all GitHub Profile links across the site to point to the resolved profile URL
+    profileLinks.forEach((link) => {
+      link.href = profileUrl;
+    });
+
+    if (handleEl) {
+      handleEl.textContent = `github.com/${username}`;
+    }
+
+    if (result.success && Array.isArray(result.repos) && result.repos.length > 0) {
+      // 1. Update Summary Stats
+      if (totalReposEl) {
+        totalReposEl.textContent = result.summary.totalPublicRepos || result.repos.length;
+      }
+
+      if (languagesListEl && Array.isArray(result.summary.topLanguages) && result.summary.topLanguages.length > 0) {
+        languagesListEl.innerHTML = result.summary.topLanguages.map((l) => {
+          const dotClass = getLanguageDotClass(l.language);
+          return `
+            <span class="lang-pill">
+              <span class="lang-dot ${dotClass}"></span>
+              ${escapeHtml(l.language)} (${l.count})
+            </span>
+          `;
+        }).join('');
+      }
+
+      // 2. Render Repository Cards
+      renderGithubRepoCards(result.repos, reposGrid);
+
+    } else {
+      // Friendly message & plain "View my GitHub" button instead of an error
+      renderGithubFallback(reposGrid, profileUrl, username, result.error);
+    }
+
+  } catch (error) {
+    console.warn('[!] GitHub frontend fetch error:', error);
+    const defaultProfileUrl = 'https://github.com/sabirhamzasabir662-pixe';
+    renderGithubFallback(reposGrid, defaultProfileUrl, 'sabirhamzasabir662-pixe');
+  }
+}
+
+function renderGithubRepoCards(repos, container) {
+  if (!container) return;
+
+  const html = repos.map((repo) => {
+    const dotClass = getLanguageDotClass(repo.language);
+    const formattedDate = formatDate(repo.updated_at);
+
+    return `
+      <article class="github-repo-card">
+        <div>
+          <div class="repo-card-top">
+            <h4 class="repo-card-title">
+              <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
+              <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(repo.name)}</a>
+            </h4>
+            ${repo.stars > 0 ? `
+              <span class="repo-stars-badge" title="${repo.stars} Stars">
+                ★ ${repo.stars}
+              </span>
+            ` : ''}
+          </div>
+
+          <p class="repo-card-desc">
+            ${escapeHtml(repo.description)}
+          </p>
+        </div>
+
+        <div class="repo-card-footer">
+          <span class="repo-language-indicator">
+            <span class="lang-dot ${dotClass}"></span>
+            ${escapeHtml(repo.language)}
+          </span>
+          <span class="repo-updated-time">${formattedDate}</span>
+          <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer" class="repo-link-action" aria-label="View ${escapeHtml(repo.name)} on GitHub">
+            View &rarr;
+          </a>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  container.innerHTML = html;
+}
+
+function renderGithubFallback(container, profileUrl, username) {
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="github-fallback-card card">
+      <div class="github-fallback-icon">
+        <svg class="icon icon-lg" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+      </div>
+      <div>
+        <h4 class="github-fallback-title">Explore Open-Source Repositories on GitHub</h4>
+        <p class="github-fallback-text">
+          Hamza actively maintains codebases, architectural patterns, and full-stack software systems on GitHub. Click below to view all public repositories, starred projects, and technical activity directly.
+        </p>
+      </div>
+      <a href="${escapeHtml(profileUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="fallback-github-cta">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+        <span>View my GitHub</span>
+      </a>
+    </div>
+  `;
+}
+
+function getLanguageDotClass(language) {
+  const lang = (language || '').toLowerCase();
+  if (lang.includes('javascript') || lang === 'js') return 'js-dot';
+  if (lang.includes('typescript') || lang === 'ts') return 'ts-dot';
+  if (lang.includes('python')) return 'py-dot';
+  if (lang.includes('html')) return 'html-dot';
+  if (lang.includes('css')) return 'css-dot';
+  if (lang.includes('php')) return 'php-dot';
+  return 'default-dot';
+}
+
+function formatDate(isoString) {
+  if (!isoString) return '';
+  try {
+    const d = new Date(isoString);
+    return `Updated ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+  } catch {
+    return '';
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. Interactive Client Contact Form (POST /api/contact)
    -------------------------------------------------------------------------- */
 function initContactForm() {
   const form = document.getElementById('contact-form');
@@ -439,7 +591,7 @@ function initContactForm() {
 }
 
 /* --------------------------------------------------------------------------
-   8. Footer Dynamic Year
+   9. Footer Dynamic Year
    -------------------------------------------------------------------------- */
 function updateCurrentYear() {
   const yearEl = document.getElementById('current-year');
@@ -449,7 +601,7 @@ function updateCurrentYear() {
 }
 
 /* --------------------------------------------------------------------------
-   9. Helper: HTML Sanitization
+   10. Helper: HTML Sanitization
    -------------------------------------------------------------------------- */
 function escapeHtml(str) {
   if (!str) return '';

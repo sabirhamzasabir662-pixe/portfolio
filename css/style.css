@@ -1285,89 +1285,145 @@ a {
 .footer {
   background: #060911;
   border-top: 1px solid var(--border-color);
-  padding: 4rem 0 2rem 0;
+  padding: 4rem 0 2.5rem 0;
   margin-top: 3rem;
 }
 
-.footer-top {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1.5fr;
+.footer-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 3rem;
-  padding-bottom: 3rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
 }
 
-.footer-brand {
-  max-width: 360px;
+.footer-col-left {
+  max-width: 520px;
+}
+
+.footer-brand-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.footer-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  color: #0a0e17;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: -0.02em;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.footer-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
 }
 
 .footer-tagline {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: var(--text-muted);
-  margin-top: 1rem;
-  line-height: 1.6;
+  margin-top: 0.65rem;
+  line-height: 1.55;
 }
 
-.footer-nav-title {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-main);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1.25rem;
-}
-
-.footer-links {
-  list-style: none;
+.footer-contact-links {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
 }
 
-.footer-links a {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.footer-links a:hover {
-  color: var(--primary);
-  padding-left: 4px;
-}
-
-.footer-contact-item {
+.footer-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   font-size: 0.88rem;
   color: var(--text-muted);
-  margin-bottom: 0.6rem;
-  line-height: 1.5;
+  transition: color var(--transition-fast);
+  text-decoration: none;
 }
 
-.footer-contact-item strong {
+.footer-contact-link:hover {
+  color: var(--accent-cyan);
+}
+
+.footer-col-right {
+  display: flex;
+  align-items: center;
+  padding-top: 0.25rem;
+}
+
+.footer-nav-row {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-nav-link {
+  font-size: 0.95rem;
+  font-weight: 600;
   color: var(--text-main);
+  transition: color var(--transition-fast);
+  text-decoration: none;
 }
 
-.footer-contact-item a:hover {
-  color: var(--primary);
+.footer-nav-link:hover {
+  color: var(--accent-cyan);
 }
 
-.footer-bottom {
+.footer-divider {
+  border: none;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+  margin: 2.5rem 0 1.75rem 0;
+  width: 100%;
+}
+
+.footer-bottom-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 2rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-copyright {
   font-size: 0.85rem;
   color: var(--text-dim);
+  margin: 0;
+  line-height: 1.5;
 }
 
-.back-to-top {
+.footer-back-to-top {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  color: var(--text-muted);
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  text-decoration: none;
+  cursor: pointer;
 }
 
-.back-to-top:hover {
-  color: var(--primary);
+.footer-back-to-top:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
 }
 
 /* --------------------------------------------------------------------------
@@ -1636,9 +1692,319 @@ a {
     display: none;
   }
 
-  .footer-bottom {
+  .footer-top-row {
     flex-direction: column;
-    gap: 1rem;
-    text-align: center;
+    align-items: flex-start;
+    gap: 2rem;
   }
+
+  .footer-nav-row {
+    gap: 1.25rem 1.75rem;
+  }
+
+  .footer-bottom-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    text-align: left;
+  }
+
+  .github-repos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-stats-col {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .github-summary-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .github-summary-box .btn {
+    width: 100%;
+  }
+
+  .cta-buttons-row {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cta-buttons-row .btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .github-repos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   16. GitHub Section & Repo Cards
+   -------------------------------------------------------------------------- */
+.github-bg {
+  background: rgba(240, 246, 252, 0.1);
+  color: #f0f6fc;
+  border: 1px solid rgba(240, 246, 252, 0.2);
+}
+
+.hero-github-btn {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+.hero-github-btn:hover {
+  background: #1e293b;
+  border-color: #f8fafc;
+  color: #ffffff;
+}
+
+.cta-buttons-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.github-summary-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.75rem 2.25rem;
+  margin-bottom: 2.5rem;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+  border: 1px solid var(--border-color);
+}
+
+.summary-stats-col {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.summary-stat-badge {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-num {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.summary-label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.35rem;
+}
+
+.summary-languages-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.summary-languages-list {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.lang-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  color: #cbd5e1;
+}
+
+.lang-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.js-dot { background-color: #f7df1e; }
+.ts-dot { background-color: #3178c6; }
+.py-dot { background-color: #3572A5; }
+.html-dot { background-color: #e34c26; }
+.css-dot { background-color: #563d7c; }
+.php-dot { background-color: #4F5D95; }
+.default-dot { background-color: var(--primary); }
+
+.github-repos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.github-repo-card {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.github-repo-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: var(--shadow-md);
+}
+
+.repo-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.repo-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.repo-card-title a {
+  color: var(--text-main);
+  word-break: break-word;
+}
+
+.repo-card-title a:hover {
+  color: var(--primary);
+}
+
+.repo-stars-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.repo-card-desc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.repo-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.85rem;
+  margin-top: auto;
+}
+
+.repo-language-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  color: #cbd5e1;
+}
+
+.repo-link-action {
+  color: var(--primary);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.repo-link-action:hover {
+  text-decoration: underline;
+}
+
+/* Fallback Card when repos are empty or API fails */
+.github-fallback-card {
+  grid-column: 1 / -1;
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.github-fallback-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(240, 246, 252, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+}
+
+.github-fallback-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.github-fallback-text {
+  max-width: 540px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.github-loading-indicator {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.footer-github-cta {
+  margin-top: 1rem;
 }
